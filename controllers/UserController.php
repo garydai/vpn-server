@@ -84,7 +84,8 @@ class UserController extends ActiveController
 	    	$user = User::findOne(['username'=>$id]);
 	     	if($user)
 	    	{
-	    		return $user;
+	    		return  array('statusCode' => 200,  'data' => array('user'=>$user));
+	    		
 	    	}
 	    	else 
 	    	{
@@ -96,6 +97,10 @@ class UserController extends ActiveController
 	    		date_default_timezone_set('Asia/Shanghai');
     			$u->dsttime = date('2020-m-d H:i:s');
 	    		$u->save();
+	    		$sql="INSERT INTO radcheck (username, attribute, op, value, dsttime) VALUES('{$id}', 'Cleartext-Password', ':=', 'gagatechang', '{$u->dsttime}')";
+	    		$connect1 = \Yii::$app->db2;
+	    		$command = $connect1->createCommand($sql);
+	    		$command->execute(); 
 	    		return  array('statusCode' => 200);
 	    		//return 1;
 	    	}
